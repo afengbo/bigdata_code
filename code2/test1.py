@@ -11,5 +11,12 @@
 #         words = line.strip().split(' ')
 #         print(words)
 
-a = '   \n排'
-print(a.strip())
+# a = '   \n排'
+# print(a.strip())
+
+# word_count = {}
+# if not word_count.get('aa'):
+#     print('111')
+
+b = [[1,2,3],[4,5,6]]
+print(b[1][0])

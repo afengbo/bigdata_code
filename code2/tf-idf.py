@@ -1,49 +1,50 @@
 import os
 import math
 
-file_path ='./data'
+file_path = "./data"
 
 i = 0
-# 获取doc和对应每篇文章的词频TF
+# 获取文章和对应每篇文章的词频TF
 doc_words = dict()
 for filename in os.listdir(file_path):
-    if i%100==0:
-        print(i,'files loaded!!')
-        # break
-    with open(file_path+'/'+filename,'r',encoding='utf-8') as f:
-        word_freq =dict()
+    # 打印加载的文件数量
+    if i % 100 == 0:
+        print(i, 'files loaded!')
+    # 统计每篇文章中的关键词词频
+    with open(file_path + '/' + filename, 'r', encoding='utf-8') as f:
+        word_count = dict()
         for line in f.readlines():
-            words = line.strip().split(' ')
+            words = line.strip().split(" ")
             for word in words:
-                if len(word.strip())<1:
+                if len(word.strip()) < 1:      # 空字符、制表位、回车不做计数
                     continue
-                if word_freq.get(word,-1)==-1:
-                    word_freq[word]=1
+                if not word_count.get(word):
+                    word_count[word] = 1
                 else:
-                    word_freq[word]+=1
-    doc_words[filename] = word_freq
-    i+=1
-doc_nums = float(i)
-# print(doc_words)
+                    word_count[word] += 1
+    doc_words[filename] = word_count
+    i += 1
 
-# 统计每个词的doc-freq
-doc_freq={}
+doc_nums = float(i)
+
+# 统计每个词在多少篇文章出现过
+word_frequency = dict()
 for doc in doc_words.keys():
     for word in doc_words[doc].keys():
-        if doc_freq.get(word,-1)==-1:
-            doc_freq[word]=1
+        if not word_frequency.get(word):
+            word_frequency[word] = 1
         else:
-            doc_freq[word]+=1
-# print(doc_freq)
+            word_frequency[word] += 1
 
 # 套idf公式
-for word in doc_freq.keys():
-    doc_freq[word]=math.log(doc_nums/float(doc_freq[word]+1))
-# print(doc_freq)
+# 反文档频率（IDF）= log（语料库的文档总数/包含该词的文档数+1）
+for word in word_frequency.keys():
+    word_frequency[word] = math.log(doc_nums / float(word_frequency[word] + 1))
+# print(word_frequency)
 
-# 套tf*idf
-print(doc_words['5yule.seg.cln.txt']['毒'])
+# TF-IDF = 词频（TF）*反文档频率（IDF）
+print(doc_words['1yule.seg.cln.txt']['芭芭拉'])
 for doc in doc_words.keys():
     for word in doc_words[doc].keys():
-        doc_words[doc][word] *= doc_freq[word]
-print(doc_words['5yule.seg.cln.txt']['毒'])
+        doc_words[doc][word] *= word_frequency[word]
+print(doc_words['1yule.seg.cln.txt']['芭芭拉'])
