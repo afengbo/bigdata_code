@@ -18,5 +18,5 @@
 # if not word_count.get('aa'):
 #     print('111')
 
-b = [[1,2,3],[4,5,6]]
-print(b[1][0])
+b = [1,2,3]
+print(sum(b))
